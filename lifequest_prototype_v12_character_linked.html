@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LifeQuest — Healthy Habits RPG (No Images)</title>
+<style>
+:root{
+  --ink:#201b2b;--panel:#302942;--panel2:#3b3350;--cream:#f5e9c9;--muted:#c5b9d5;
+  --green:#8bcf78;--green-dark:#477d52;--gold:#f4c96b;--blue:#8bc8ef;--red:#e98282;
+  --line:#625575;--shadow:#17131f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#171520;color:var(--cream);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;image-rendering:pixelated}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.shell{max-width:1180px;margin:auto;padding:8px 14px 18px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;display:grid;place-items:center;background:var(--gold);color:#35233e;border:4px solid #fff0b9;box-shadow:4px 4px 0 #8e6b48;font-size:24px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(21px,4vw,32px);margin:0;letter-spacing:1px}
+.subtitle{font-size:11px;color:var(--muted);margin-top:5px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:2px solid var(--line);background:var(--panel2);color:var(--cream);padding:10px 12px;box-shadow:3px 3px 0 var(--shadow);font-size:12px}
+.btn:hover{filter:brightness(1.15);transform:translate(-1px,-1px)}
+.btn.primary{background:var(--green);color:#1d2a21;border-color:#b6f29d;font-weight:bold}
+.btn.gold{background:var(--gold);color:#33253b;border-color:#fff0b9;font-weight:bold}
+.btn.danger{background:#5d303d;border-color:#a65c6b}
+.layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
+.panel{background:var(--panel);border:3px solid var(--line);box-shadow:5px 5px 0 var(--shadow);padding:16px;min-width:0}
+.panel-title{font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.panel-title span{color:var(--gold)}
+.hero{background:linear-gradient(180deg,#3b3455,#28243a);position:relative;overflow:hidden}
+.scene{height:300px;background:#8ac9e8;position:relative;border:4px solid #171520;margin-bottom:0;overflow:hidden;image-rendering:pixelated;box-shadow:inset 0 0 0 3px #8b7754}
+.scene-art{position:absolute;inset:0;background-size:cover;background-position:center bottom;background-repeat:no-repeat}
+.scene-art.village{background:linear-gradient(#9bd0ed 0 45%,#c4d5d4 45% 50%,#87a66c 50% 100%)}
+.scene-art.courtyard{background:linear-gradient(#8ec5e7 0 42%,#d4c39a 42% 61%,#777d79 61% 100%)}
+.scene-art.training{background:linear-gradient(#a4d1e8 0 44%,#d0c18b 44% 100%)}
+.scene-label{position:absolute;top:12px;left:12px;z-index:5;background:#211c2bd9;border:2px solid #d6b66d;padding:8px 10px;font-size:11px;letter-spacing:1px;color:#f5e9c9}
+.scene-switcher{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px}
+.scene-btn{font-size:10px;padding:7px 9px;border:2px solid #625575;background:#262136;color:#c5b9d5}
+.scene-btn.active{background:#f4c96b;color:#30233a;border-color:#fff0b9}
+.avatar-wrap{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:4;filter:drop-shadow(4px 5px 0 #273448);width:150px;height:230px;display:flex;align-items:flex-end;justify-content:center}
+.avatar{width:120px;height:210px;position:relative;image-rendering:pixelated;transform:scale(1.65);transform-origin:bottom center}
+.avatar .head{position:absolute;left:40px;top:0;width:40px;height:36px;background:#e6b58b;box-shadow:0 -10px 0 #69473e,10px -10px 0 #69473e}
+.avatar .hair{position:absolute;left:36px;top:-8px;width:48px;height:16px;background:#704b3c}
+.avatar .body{position:absolute;left:28px;top:36px;width:64px;height:42px;background:var(--avatar,#5278a9);border:8px solid #2b3548}
+.avatar .belt{position:absolute;left:28px;top:60px;width:64px;height:10px;background:#e3b65e}
+.avatar .legs{position:absolute;left:32px;top:78px;width:20px;height:28px;background:#4d4055;box-shadow:36px 0 0 #4d4055}
+.avatar .cape{position:absolute;left:10px;top:36px;width:20px;height:52px;background:#a74e54}
+.hero-name{font-size:19px;margin-bottom:5px}
+.classline{font-size:11px;color:var(--muted);margin-bottom:13px}
+.levelrow{display:flex;justify-content:space-between;align-items:center;font-size:16px;margin:10px 0 8px}
+.xpbar{height:22px;background:#171520;border:2px solid #817291;padding:2px;margin-bottom:7px}
+.xpfill{height:100%;width:0;background:repeating-linear-gradient(90deg,#8bcf78 0 12px,#a8e78e 12px 15px);transition:width .25s}
+.small{font-size:12px;color:var(--muted)}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.stat{background:#262136;border:2px solid #514660;padding:9px}
+.stat strong{display:block;color:var(--gold);font-size:16px;margin-top:5px}
+.maincol{display:grid;gap:16px;align-content:start}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.summary-card{background:#262136;border:2px solid #514660;padding:12px}
+.summary-card .num{font-size:23px;color:var(--gold);font-weight:bold;margin:5px 0}
+.summary-card .label{font-size:10px;color:var(--muted);text-transform:uppercase}
+.questlist{display:grid;gap:9px}
+.quest{display:flex;align-items:center;gap:11px;padding:11px;background:#262136;border:2px solid #514660}
+.quest.done{border-color:#568b5a;background:#25352d}
+.quest-icon{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;background:#453b59;border:2px solid #6e6081;font-size:20px}
+.quest.done .quest-icon{background:#365a3d;border-color:#70ad75}
+.quest-content{flex:1;min-width:0}
+.quest-name{font-size:12px;font-weight:bold;margin-bottom:5px;overflow-wrap:anywhere}
+.quest-meta{font-size:10px;color:var(--muted)}
+.quest-reward{font-size:11px;color:var(--gold);white-space:nowrap}
+.checkbtn{border:2px solid #817291;background:#3a334a;color:var(--cream);width:29px;height:29px;font-size:17px}
+.quest.done .checkbtn{background:var(--green);color:#1d2a21;border-color:#c6f5ae}
+.bottomgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.achievement{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #514660}
+.achievement:last-child{border-bottom:0}
+.ach-icon{font-size:23px;width:35px;text-align:center}
+.ach-title{font-size:11px;margin-bottom:4px}
+.ach-desc{font-size:10px;color:var(--muted)}
+.locked{opacity:.42}
+.formrow{display:flex;gap:8px;margin-top:12px}
+.formrow input,.formrow select,.modal input,.modal select{width:100%;min-width:0;background:#201b2b;color:var(--cream);border:2px solid #625575;padding:10px;outline:none}
+.formrow select{max-width:120px}
+.formrow input:focus,.modal input:focus,.modal select:focus{border-color:var(--gold)}
+.notice{font-size:10px;color:var(--muted);line-height:1.6;margin-top:12px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--gold);color:#30233a;padding:12px 16px;border:3px solid #fff0b9;box-shadow:4px 4px 0 #0008;font-size:12px;font-weight:bold;z-index:10;display:none;max-width:90vw;text-align:center}
+.modalback{position:fixed;inset:0;background:#090811cc;display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal{background:var(--panel);border:3px solid var(--gold);box-shadow:7px 7px 0 #090811;padding:20px;width:min(460px,100%)}
+.modal h2{font-size:18px;margin-bottom:8px}
+.modal label{display:block;font-size:11px;color:var(--muted);margin:14px 0 6px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+.empty{text-align:center;padding:22px;color:var(--muted);font-size:12px}
+.footer{text-align:center;color:#8f829e;font-size:10px;padding:22px 0 8px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.hero{display:grid;grid-template-columns:1fr;}.bottomgrid{grid-template-columns:1fr}.scene{height:260px}.summary-card{padding:9px}.summary-card .num{font-size:20px}.panel{padding:12px}.panel-title{margin-bottom:8px}}
+@media(max-width:420px){.shell{padding:11px}.panel{padding:12px}.summary{gap:6px}.summary-card .label{font-size:9px}.quest{gap:7px;padding:8px}.quest-icon{width:34px;height:34px;flex-basis:34px}.quest-name{font-size:11px}.quest-reward{font-size:10px}.top-actions .btn{padding:8px;font-size:10px}}
+
+/* LifeQuest forest clearing background asset */
+.scene-art.forest {
+  background-image: url('https://raw.githubusercontent.com/Mezillious/Life-Quest/242773fc15b65f122a7eba2a855e991f5cf51f0b/69B31CFB-6E9E-4FA1-AB21-F5426715C264.png');
+  background-size: cover;
+  background-position: center bottom;
+}
+
+
+.page-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 14px;padding:10px 4px;flex-wrap:wrap}
+.page-heading h2{font-size:22px;margin:0 0 5px;color:var(--cream)}
+.quests-page .maincol{max-width:900px;margin:0 auto}
+.home-placeholder{margin-top:12px}
+body.quests-open .layout{display:none}
+body.quests-open .quests-page{display:block!important}
+body.quests-open .footer{margin-top:20px}
+
+</style>
+
+<style>
+/* Static Level 1 Human Tank overlay */
+.avatar-wrap { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); z-index:4; width:100%; height:100%; display:flex; align-items:flex-end; justify-content:center; filter:drop-shadow(3px 4px 0 #273448); pointer-events:none; }
+.tank-sprite { display:block; height:92%; max-height:100%; width:auto; max-width:92%; object-fit:contain; object-position:center bottom; image-rendering:pixelated; }
+</style>
+
+<style>
+.character-name-field { width:100%; background:#201b2b; color:var(--cream); border:2px solid #625575; padding:7px 10px; font:inherit; font-size:18px; font-weight:bold; margin:0 0 4px; }
+.character-name-field:focus { outline:none; border-color:var(--gold); }
+.name-caption { font-size:10px; color:var(--muted); margin:0 0 4px; display:block; }
+
+.character-name-display{font-size:23px;line-height:1.15;margin:2px 0 5px;color:var(--cream);overflow-wrap:anywhere}
+.layout{display:block;max-width:520px;margin:0 auto}
+.hero{width:100%}
+.setup-page{max-width:760px;margin:0 auto}
+.setup-form{display:grid;gap:10px}
+.setup-form input,.setup-form select{width:100%;background:#201b2b;color:var(--cream);border:2px solid #625575;padding:10px;font:inherit}
+.setup-form label{font-size:12px;color:var(--muted);font-weight:bold;margin-top:4px}
+body.quests-open .layout,body.quests-open .setup-page{display:none!important}
+body.quests-open .quests-page{display:block!important}
+body.setup-open .layout,body.setup-open .quests-page{display:none!important}
+body.setup-open .setup-page{display:block!important}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">✦</div>
+      <div><h1>LIFEQUEST</h1><div class="subtitle">REAL-LIFE HABITS. FANTASY PROGRESSION.</div></div>
+    </div>
+    <div class="top-actions">
+      <button class="btn" id="setupNavBtn">⚙ Setup</button>
+      <button class="btn" id="questsNavBtn">📜 Quests</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="panel hero">
+      <div class="panel-title">Your Adventurer <span>✦</span></div>
+      <h2 class="character-name-display" id="characterNameDisplay">Wanderer</h2>
+      <div class="classline" id="heroClass">Level 1 · Ranger of the Greenwild</div>
+      <div class="levelrow"><strong id="levelLabel">LEVEL 1</strong><span id="xpLabel">0 / 100 XP</span></div>
+      <div class="xpbar"><div class="xpfill" id="xpFill"></div></div>
+      <div class="small" id="nextLevel">100 XP until your next level</div>
+      <div class="scene forest" id="sceneWindow" aria-label="Large fantasy scene with character overlay">
+        <div class="scene-art forest" id="sceneArt"></div>
+        
+        <div class="scene-label" id="sceneLabel">FOREST CLEARING</div>
+        <div class="avatar-wrap"><img class="tank-sprite" id="avatar" src="https://raw.githubusercontent.com/Mezillious/Life-Quest/b76e33f799a9ff87e098a88cdaf9c65af0249e5e/C6D5228B-0375-4C0F-AEA0-79C499481A46.png" alt="Level 1 Human Tank holding a sword and wooden shield"></div>
+      </div>
+      
+      
+      
+    </aside>
+  </div>
+
+  <main class="setup-page" id="setupPage" style="display:none">
+    <div class="page-heading"><div><h2>⚙ Character Setup</h2><p class="small">Choose the details for your adventurer.</p></div><button class="btn" id="setupBackBtn">← Character</button></div>
+    <form class="panel setup-form" id="setupForm">
+      <label for="setupName">Character name</label><input id="setupName" maxlength="24" required placeholder="Enter a name">
+      <label for="setupClass">Class</label><select id="setupClass"><option>Tank</option><option>Healer</option><option>Damage Dealer</option><option>Ranger</option><option>Fighter</option><option>Druid</option><option>Paladin</option><option>Bard</option><option>Wizard</option><option>Rogue</option><option>Cleric</option></select>
+      <label for="setupColor">Tunic colour</label><select id="setupColor"><option value="#5278a9">River blue</option><option value="#5b9a65">Forest green</option><option value="#a6535d">Ruby red</option><option value="#9a75bd">Mystic violet</option><option value="#c28a42">Amber gold</option></select>
+      <div class="modal-actions"><button class="btn primary" type="submit">Save setup</button></div>
+    </form>
+  </main>
+
+  <main class="quests-page" id="questsPage" style="display:none">
+    <div class="page-heading">
+      <div><h2>📜 Quests</h2><p class="small">Daily habits, achievements and field notes.</p></div>
+      <button class="btn" id="backHomeBtn">← Character</button>
+    </div>
+    <div class="maincol">
+      <section class="panel">
+        <div class="panel-title">Daily quest board <span>📜</span></div>
+        <div class="questlist" id="questList"></div>
+        <form class="formrow" id="questForm">
+          <input id="questName" maxlength="70" placeholder="Add a healthy habit quest…" aria-label="New quest name" required>
+          <select id="questXp" aria-label="Quest XP reward">
+            <option value="10">10 XP</option><option value="15">15 XP</option><option value="20" selected>20 XP</option><option value="30">30 XP</option><option value="40">40 XP</option>
+          </select>
+          <button class="btn primary" type="submit">+ Add</button>
+        </form>
+        <div class="notice">Make quests realistic and personal. Examples: take a short walk, eat a balanced meal, stretch, prepare tomorrow's lunch or take a screen break.</div>
+      </section>
+
+      <div class="bottomgrid">
+        <section class="panel">
+          <div class="panel-title">Achievements <span>🏆</span></div>
+          <div id="achievements"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-title">Field notes <span>✎</span></div>
+          <p style="font-size:12px;line-height:1.6">Small steps count. Your goal is to build a party of habits that support your real life — not to achieve a perfect streak.</p>
+          <label for="journal" class="small">Today's note (saved on this device)</label>
+          <textarea id="journal" rows="4" maxlength="500" style="width:100%;resize:vertical;background:#201b2b;color:var(--cream);border:2px solid #625575;padding:10px;font:inherit;font-size:11px" placeholder="What went well today? What would help tomorrow?"></textarea>
+          <div class="small" id="saveStatus" style="margin-top:6px">Saved locally</div>
+        </section>
+      </div>
+
+    </div>
+  </main>
+
+  <div class="footer">LIFEQUEST PROTOTYPE 0.1 · YOUR JOURNEY, YOUR PACE · PROGRESS SAVED IN THIS BROWSER</div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<script>
+const STORAGE_KEY = "lifequest-prototype-v01";
+const defaultQuests = [
+  {id:"walk",name:"Go for a walk or move your body",category:"Movement",xp:20,icon:"👟"},
+  {id:"meal",name:"Eat a balanced, nourishing meal",category:"Nutrition",xp:20,icon:"🍲"},
+  {id:"water",name:"Drink water regularly",category:"Hydration",xp:10,icon:"💧"},
+  {id:"stretch",name:"Stretch or take a movement break",category:"Mobility",xp:15,icon:"🌿"},
+  {id:"plan",name:"Plan one helpful choice for tomorrow",category:"Preparation",xp:15,icon:"🗺️"}
+];
+const todayKey = () => new Date().toLocaleDateString("en-CA");
+const freshState = () => ({
+  character:{name:"Wanderer",className:"Ranger",color:"#5278a9"},
+  xp:0,level:1,totalDone:0,quests:structuredClone(defaultQuests),completed:{},journal:{},createdAt:Date.now()
+});
+let state;
+try { state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || freshState(); }
+catch(e) { state = freshState(); }
+if(!state.quests) state.quests=structuredClone(defaultQuests);
+if(!state.completed) state.completed={};
+if(!state.journal) state.journal={};
+if(!state.character) state.character=freshState().character;
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+function xpForNext(level){return 100 + (Math.max(1,level)-1)*50;}
+function xpIntoLevel(total){
+  let level=1,remaining=total;
+  while(remaining>=xpForNext(level)){remaining-=xpForNext(level);level++;}
+  return {level,remaining,needed:xpForNext(level)};
+}
+function completionsToday(){return state.completed[todayKey()]||[];}
+function currentQuestIds(){return new Set(state.quests.map(q=>q.id));}
+function toast(message){const el=document.getElementById("toast");el.textContent=message;el.style.display="block";clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.style.display="none",2500);}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function render(){
+  const p=state.character, prog=xpIntoLevel(state.xp), done=completionsToday(), ids=currentQuestIds();
+  state.level=prog.level;
+  document.getElementById("characterNameDisplay").textContent=p.name;
+  document.getElementById("setupName").value=p.name;
+  document.getElementById("setupClass").value=p.className;
+  document.getElementById("setupColor").value=p.color;
+  document.getElementById("heroClass").textContent=`Level ${prog.level} · ${p.className} of the Greenwild`;
+  document.getElementById("levelLabel").textContent=`LEVEL ${prog.level}`;
+  document.getElementById("xpLabel").textContent=`${prog.remaining} / ${prog.needed} XP`;
+  document.getElementById("xpFill").style.width=`${Math.min(100,prog.remaining/prog.needed*100)}%`;
+  document.getElementById("nextLevel").textContent=`${prog.needed-prog.remaining} XP until your next level`;
+  
+  document.getElementById("todayLabel").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}).toUpperCase();
+  document.getElementById("questCount").textContent=`${state.quests.filter(q=>done.includes(q.id)).length}/${state.quests.length}`;
+  document.getElementById("todayXp").textContent=state.quests.filter(q=>done.includes(q.id)).reduce((n,q)=>n+q.xp,0);
+  document.getElementById("totalDone").textContent=state.totalDone;
+  const list=document.getElementById("questList");
+  if(!state.quests.length){list.innerHTML='<div class="empty">Your quest board is empty. Add a habit below to begin.</div>';}
+  else list.innerHTML=state.quests.map(q=>{
+    const isDone=done.includes(q.id);
+    return `<div class="quest ${isDone?"done":""}">
+      <div class="quest-icon">${q.icon||"📜"}</div>
+      <div class="quest-content"><div class="quest-name">${escapeHtml(q.name)}</div><div class="quest-meta">${escapeHtml(q.category||"Personal quest")} · ${isDone?"Completed today":"Daily quest"}</div></div>
+      <div class="quest-reward">+${q.xp} XP</div>
+      <button class="checkbtn" data-toggle="${escapeHtml(q.id)}" aria-label="${isDone?"Undo":"Complete"} ${escapeHtml(q.name)}" title="${isDone?"Undo completion":"Complete quest"}">${isDone?"✓":"○"}</button>
+    </div>`;
+  }).join("");
+  const achievements=[
+    {icon:"🌱",title:"First Steps",desc:"Complete your first quest.",ok:state.totalDone>=1},
+    {icon:"🧭",title:"Finding Your Way",desc:"Reach level 3.",ok:prog.level>=3},
+    {icon:"🔥",title:"Habit Builder",desc:"Complete 10 quests in total.",ok:state.totalDone>=10},
+    {icon:"🏕️",title:"Seasoned Adventurer",desc:"Reach level 5.",ok:prog.level>=5}
+  ];
+  document.getElementById("achievements").innerHTML=achievements.map(a=>`<div class="achievement ${a.ok?"":"locked"}"><div class="ach-icon">${a.icon}</div><div><div class="ach-title">${a.ok?"✦ ":""}${a.title}</div><div class="ach-desc">${a.desc}</div></div></div>`).join("");
+  document.getElementById("journal").value=state.journal[todayKey()]||"";
+  save();
+}
+document.getElementById("questList").addEventListener("click",e=>{
+  const b=e.target.closest("[data-toggle]");if(!b)return;
+  const id=b.dataset.toggle,done=completionsToday(),q=state.quests.find(q=>q.id===id);if(!q)return;
+  const wasLevel=xpIntoLevel(state.xp).level;
+  if(done.includes(id)){
+    state.completed[todayKey()]=done.filter(x=>x!==id);
+    state.xp=Math.max(0,state.xp-q.xp);state.totalDone=Math.max(0,state.totalDone-1);
+    toast("Quest completion undone.");
+  }else{
+    state.completed[todayKey()]=[...done,id];state.xp+=q.xp;state.totalDone++;
+    const newLevel=xpIntoLevel(state.xp).level;
+    toast(newLevel>wasLevel?`LEVEL UP! You reached level ${newLevel}!`:`Quest complete! +${q.xp} XP`);
+  }
+  render();
+});
+document.getElementById("questForm").addEventListener("submit",e=>{
+  e.preventDefault();const input=document.getElementById("questName"),name=input.value.trim();if(!name)return;
+  state.quests.push({id:"custom-"+Date.now(),name,category:"Personal quest",xp:Number(document.getElementById("questXp").value),icon:"✨"});
+  input.value="";render();toast("New quest added to your board.");
+});
+
+function showQuests(){document.body.classList.remove("setup-open");document.body.classList.add("quests-open");window.scrollTo(0,0);}
+function showCharacter(){document.body.classList.remove("quests-open","setup-open");window.scrollTo(0,0);}
+function showSetup(){document.body.classList.remove("quests-open");document.body.classList.add("setup-open");render();window.scrollTo(0,0);}
+document.getElementById("setupNavBtn").addEventListener("click",showSetup);
+document.getElementById("setupBackBtn").addEventListener("click",showCharacter);
+document.getElementById("questsNavBtn").addEventListener("click",showQuests);
+document.getElementById("backHomeBtn").addEventListener("click",showCharacter);
+document.getElementById("setupForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  state.character={name:document.getElementById("setupName").value.trim()||"Wanderer",className:document.getElementById("setupClass").value,color:document.getElementById("setupColor").value};
+  save();render();showCharacter();toast("Character setup saved!");
+});
+
+document.getElementById("journal").addEventListener("input",e=>{
+  state.journal[todayKey()]=e.target.value;save();const status=document.getElementById("saveStatus");status.textContent="Saving locally…";clearTimeout(status.timer);status.timer=setTimeout(()=>status.textContent="Saved locally",400);
+});
+
+
+
+render();
+</script>
+</body>
+</html>
